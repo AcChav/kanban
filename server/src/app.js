@@ -8,8 +8,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Normalize CLIENT_URL to remove trailing slashes if present
+const clientUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/+$/, '') : '*';
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*', // Allows local dev or specific Vercel domain
+  origin: clientUrl,
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true
 }));
