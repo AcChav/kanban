@@ -96,29 +96,35 @@ export default function App() {
           <div>
             {/* Sprint Selector Dropdown */}
             <div className="flex items-center gap-2">
-              <div className="relative inline-flex items-center">
-                <select
-                  value={currentSprintId || ''}
-                  onChange={(e) => setCurrentSprintId(Number(e.target.value))}
-                  className="appearance-none bg-slate-900 border border-slate-700/80 hover:border-slate-600 rounded-lg pl-3 pr-8 py-1 text-base font-bold text-slate-100 cursor-pointer focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
-                >
-                  {sprints.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown size={14} className="absolute right-2.5 text-slate-400 pointer-events-none" />
-              </div>
+              {sprints.length > 0 ? (
+                <>
+                  <div className="relative inline-flex items-center">
+                    <select
+                      value={currentSprintId || ''}
+                      onChange={(e) => setCurrentSprintId(Number(e.target.value))}
+                      className="appearance-none bg-slate-900 border border-slate-700/80 hover:border-slate-600 rounded-lg pl-3 pr-8 py-1 text-base font-bold text-slate-100 cursor-pointer focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
+                    >
+                      {sprints.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={14} className="absolute right-2.5 text-slate-400 pointer-events-none" />
+                  </div>
 
-              {currentSprint && (
-                <button
-                  onClick={() => setIsManageSprintOpen(true)}
-                  title="Sprint Settings"
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
-                >
-                  <Settings2 size={16} />
-                </button>
+                  {currentSprint && (
+                    <button
+                      onClick={() => setIsManageSprintOpen(true)}
+                      title="Sprint Settings"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
+                    >
+                      <Settings2 size={16} />
+                    </button>
+                  )}
+                </>
+              ) : (
+                <span className="text-base font-bold text-slate-100">No Active Sprints</span>
               )}
 
               <button
@@ -131,7 +137,7 @@ export default function App() {
             </div>
 
             <p className="text-xs text-slate-400 mt-1">
-              {currentSprint?.goal || 'No goal set for this sprint • Drag cards to reassign status'}
+              {currentSprint?.goal || 'Create or select a sprint to manage tasks'}
             </p>
           </div>
         </div>
