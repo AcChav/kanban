@@ -11,8 +11,20 @@ import {
   updateUser,
   deleteUser
 } from '../controllers/task.controller.js';
+import {
+  getSprints,
+  createSprint,
+  updateSprint,
+  deleteSprint,
+} from '../controllers/sprint.controller.js';
 
 const router = Router();
+
+// Sprint routes
+router.get('/sprints', getSprints);
+router.post('/sprints', createSprint);
+router.patch('/sprints/:id', updateSprint);
+router.delete('/sprints/:id', deleteSprint);
 
 // User routes
 router.get('/users', getUsers);
