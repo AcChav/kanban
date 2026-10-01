@@ -1,4 +1,4 @@
-import { pool } from '../config/db.js';
+import { pool } from "../config/db.js";
 
 export const SprintRepository = {
   async getAll() {
@@ -10,11 +10,17 @@ export const SprintRepository = {
         s.start_date,
         s.end_date,
         s.created_at,
-        COUNT(t.id)::int AS total_tasks,
-        COUNT(CASE WHEN t.status = 'DONE' THEN 1 END)::int AS completed_tasks
+        COALESCE(t.total_tasks, 0)::int AS total_tasks,
+        COALESCE(t.completed_tasks, 0)::int AS completed_tasks
       FROM sprints s
-      LEFT JOIN tasks t ON s.id = t.sprint_id
-      GROUP BY s.id, s.name, s.goal, s.start_date, s.end_date, s.created_at
+      LEFT JOIN (
+        SELECT 
+          sprint_id,
+          COUNT(*)::int AS total_tasks,
+          COUNT(CASE WHEN status = 'DONE' THEN 1 END)::int AS completed_tasks
+        FROM tasks
+        GROUP BY sprint_id
+      ) t ON s.id = t.sprint_id
       ORDER BY s.id ASC;
     `;
     const { rows } = await pool.query(query);
@@ -66,13 +72,16 @@ export const SprintRepository = {
   async delete(id) {
     const client = await pool.connect();
     try {
-      await client.query('BEGIN');
-      await client.query('DELETE FROM tasks WHERE sprint_id = $1;', [id]);
-      const res = await client.query('DELETE FROM sprints WHERE id = $1 RETURNING id;', [id]);
-      await client.query('COMMIT');
+      await client.query("BEGIN");
+      await client.query("DELETE FROM tasks WHERE sprint_id = $1;", [id]);
+      const res = await client.query(
+        "DELETE FROM sprints WHERE id = $1 RETURNING id;",
+        [id],
+      );
+      await client.query("COMMIT");
       return res.rows[0];
     } catch (err) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw err;
     } finally {
       client.release();
