@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X, AlignLeft } from "lucide-react";
+import { API_BASE_URL } from "../config/api.js";
 
 export default function EditTaskModal({
   isOpen,
@@ -30,7 +31,7 @@ export default function EditTaskModal({
 
     setSaving(true);
     try {
-      const res = await fetch(`/api/tasks/${task.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/tasks/${task.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -63,7 +64,6 @@ export default function EditTaskModal({
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/90">
           <div className="flex items-center gap-3">
-            {/* Priority Selector / Badge */}
             {isEditing ? (
               <select
                 value={priority}

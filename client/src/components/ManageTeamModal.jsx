@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, UserPlus, User, Edit2, Trash2, Check } from 'lucide-react';
+import { API_BASE_URL } from '../config/api.js';
 
 export default function ManageTeamModal({
   isOpen,
@@ -22,7 +23,7 @@ export default function ManageTeamModal({
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/users', {
+      const res = await fetch(`${API_BASE_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name.trim() }),
@@ -47,7 +48,7 @@ export default function ManageTeamModal({
   const handleSaveEdit = async (userId) => {
     if (!editName.trim()) return;
     try {
-      const res = await fetch(`/api/users/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editName.trim() }),
@@ -68,7 +69,7 @@ export default function ManageTeamModal({
     }
 
     try {
-      const res = await fetch(`/api/users/${user.id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/users/${user.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete member');
 
       onUserDeleted(user.id);

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import KanbanBoard from './components/KanbanBoard.jsx';
-import CreateTaskModal from './components/CreateTaskModal.jsx';
-import ManageTeamModal from './components/ManageTeamModal.jsx';
-import SprintMetrics from './components/SprintMetrics.jsx';
-import { Layers, Plus, Users } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import KanbanBoard from "./components/KanbanBoard.jsx";
+import CreateTaskModal from "./components/CreateTaskModal.jsx";
+import ManageTeamModal from "./components/ManageTeamModal.jsx";
+import SprintMetrics from "./components/SprintMetrics.jsx";
+import { Layers, Plus, Users } from "lucide-react";
+import { API_BASE_URL } from "./config/api.js";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ export default function App() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchUsers = () => {
-    fetch('/api/users')
+    fetch(`${API_BASE_URL}/api/users`)
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch(console.error);
@@ -32,7 +33,9 @@ export default function App() {
   };
 
   const handleUserUpdated = (updatedUser) => {
-    setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
+    setUsers((prev) =>
+      prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
+    );
     // Refresh board to display the updated name on task cards
     setRefreshKey((prev) => prev + 1);
   };
@@ -82,11 +85,11 @@ export default function App() {
       </header>
 
       {/* Main Board View */}
-      <KanbanBoard 
-        sprintId={1} 
+      <KanbanBoard
+        sprintId={1}
         users={users}
-        key={refreshKey} 
-        onTasksChange={(updated) => setTasks(updated)} 
+        key={refreshKey}
+        onTasksChange={(updated) => setTasks(updated)}
       />
 
       {/* Task Creation Modal */}

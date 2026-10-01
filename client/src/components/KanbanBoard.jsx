@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Column from './Column.jsx';
 import EditTaskModal from './EditTaskModal.jsx';
+import { API_BASE_URL } from '../config/api.js';
 
 const COLUMNS = [
   { id: 'TODO', title: 'To Do', dotColor: 'bg-amber-400' },
@@ -17,7 +18,7 @@ export default function KanbanBoard({ sprintId = 1, users = [], onTasksChange })
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch(`/api/sprints/${sprintId}/tasks`);
+      const res = await fetch(`${API_BASE_URL}/api/sprints/${sprintId}/tasks`);
       const data = await res.json();
       setTasks(data);
       if (onTasksChange) onTasksChange(data);
@@ -61,7 +62,7 @@ export default function KanbanBoard({ sprintId = 1, users = [], onTasksChange })
     if (onTasksChange) onTasksChange(updatedTasks);
 
     try {
-      await fetch(`/api/tasks/${draggedTaskId}/position`, {
+      await fetch(`${API_BASE_URL}/api/tasks/${draggedTaskId}/position`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: targetStatus, position: newPosition })
@@ -90,7 +91,7 @@ export default function KanbanBoard({ sprintId = 1, users = [], onTasksChange })
     if (onTasksChange) onTasksChange(updatedTasks);
 
     try {
-      await fetch(`/api/tasks/${taskId}/assign`, {
+      await fetch(`${API_BASE_URL}/api/tasks/${taskId}/assign`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId }),
@@ -108,7 +109,7 @@ export default function KanbanBoard({ sprintId = 1, users = [], onTasksChange })
     if (onTasksChange) onTasksChange(updated);
 
     try {
-      await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, { method: 'DELETE' });
     } catch (err) {
       console.error(err);
       setTasks(previous);

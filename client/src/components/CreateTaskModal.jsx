@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { API_BASE_URL } from "../config/api.js";
 
 export default function CreateTaskModal({
   isOpen,
@@ -23,7 +24,7 @@ export default function CreateTaskModal({
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/tasks", {
+      const res = await fetch(`${API_BASE_URL}/api/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,6 +46,7 @@ export default function CreateTaskModal({
       setTitle("");
       setDescription("");
       setStatus("TODO");
+      setPriority("MEDIUM");
       setAssignedUserId("");
     } catch (err) {
       console.error(err);
@@ -104,7 +106,7 @@ export default function CreateTaskModal({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none [color-scheme:dark]"
               >
                 <option value="TODO">To Do</option>
                 <option value="IN_PROGRESS">In Progress</option>
@@ -120,7 +122,7 @@ export default function CreateTaskModal({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none [color-scheme:dark]"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -129,14 +131,14 @@ export default function CreateTaskModal({
               </select>
             </div>
 
-            <div>
+            <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-300 mb-1">
                 Assignee
               </label>
               <select
                 value={assignedUserId}
                 onChange={(e) => setAssignedUserId(e.target.value)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none [color-scheme:dark]"
               >
                 <option value="">Unassigned</option>
                 {users.map((u) => (
